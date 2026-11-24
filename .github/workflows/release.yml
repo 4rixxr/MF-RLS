@@ -1,0 +1,91 @@
+name: Build and publish MediaForge release
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ main ]
+    paths: [ "release.env", ".github/workflows/release.yml" ]
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: windows-latest
+    timeout-minutes: 90
+    defaults:
+      run:
+        shell: bash
+        working-directory: mediaforge
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: rls
+
+      - name: Read release settings
+        working-directory: rls
+        run: cat release.env >> "$GITHUB_ENV"
+
+      - uses: actions/checkout@v4
+        with:
+          repository: 4rixxr/MediaForge
+          ref: ${{ env.SOURCE_REF }}
+          path: mediaforge
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "8.0.x"
+
+      - name: Fetch bundled tools (FFmpeg, yt-dlp, Deno, CDRDAO)
+        run: ./scripts/fetch-tools.sh
+
+      - name: Install VCDImager (MSYS2)
+        uses: msys2/setup-msys2@v2
+        with:
+          msystem: UCRT64
+          update: true
+          install: mingw-w64-ucrt-x86_64-vcdimager
+
+      - name: Stage VCDImager
+        shell: msys2 {0}
+        run: bash scripts/stage-vcdimager.sh
+
+      - name: Get NSIS (official zip, SHA256-pinned)
+        run: |
+          ver=3.11
+          sha=c7d27f780ddb6cffb4730138cd1591e841f4b7edb155856901cdf5f214394fa1
+          zip="$RUNNER_TEMP/nsis.zip"
+          for i in 1 2 3 4 5; do
+            if curl -fsSL --retry 3 -o "$zip" "https://downloads.sourceforge.net/project/nsis/NSIS%203/$ver/nsis-$ver.zip" \
+               && echo "$sha  $zip" | sha256sum -c -; then
+              unzip -q -o "$zip" -d "$RUNNER_TEMP"
+              cygpath -w "$RUNNER_TEMP/nsis-$ver" >> "$GITHUB_PATH"
+              exit 0
+            fi
+            sleep $((i * 10))
+          done
+          exit 1
+
+      - name: Build installer and portable EXE
+        run: ./scripts/build-windows.sh
+
+      - name: Check VCDImager is bundled
+        run: test -s out/win/app/tools/vcdimager/vcdimager.exe
+
+      - name: Self-test the packaged app
+        shell: pwsh
+        run: |
+          $p = Start-Process -FilePath "out\win\app\MediaForge.exe" -ArgumentList "--self-test" -Wait -PassThru -NoNewWindow
+          if ($p.ExitCode -ne 0) { throw "Self-test failed with exit code $($p.ExitCode)" }
+
+      - name: Publish GitHub Release (separate files)
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          files=(dist/MediaForge-Setup-*.exe dist/MediaForge-Portable-*.exe dist/SHA256SUMS.txt)
+          notes="MediaForge ${RELEASE_TAG#v} untuk Windows 10/11 64-bit. Unduh **Setup** untuk menginstal, atau **Portable** untuk langsung menjalankan tanpa instal. Sudah termasuk FFmpeg, yt-dlp, Deno, CDRDAO, dan VCDImager. Dibangun dari 4rixxr/MediaForge@${SOURCE_REF:0:7}."
+          if gh release view "$RELEASE_TAG" --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1; then
+            gh release upload "$RELEASE_TAG" "${files[@]}" --clobber --repo "$GITHUB_REPOSITORY"
+          else
+            gh release create "$RELEASE_TAG" "${files[@]}" --title "MediaForge ${RELEASE_TAG#v}" --notes "$notes" --target "$GITHUB_SHA" --repo "$GITHUB_REPOSITORY"
+          fi
