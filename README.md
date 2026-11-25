@@ -1,4 +1,4 @@
-# TonePix for Windows
+# TonePix [Beta Ver.] for Windows
 
 **TonePix** (sebelumnya bernama **MediaForge**) adalah aplikasi desktop native untuk Windows. Satu aplikasi untuk:
 - unduh dan konversi media;
@@ -41,5 +41,4 @@ Rilis dibuat otomatis oleh GitHub Actions (`.github/workflows/release.yml`) dari
 - menjalankan self-test;
 - menerbitkan installer, portable, dan checksum.
 
-Untuk merilis versi baru, ubah `RELEASE_TAG` dan `SOURCE_REF` di `release.env` lalu commit ke `main`, atau jalankan
-workflow secara manual.
+Coming soon porting to MacOS, iOS, Android & OxygenOS.
