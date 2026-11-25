@@ -1,4 +1,4 @@
-# MF-RLS — Rilis TonePix untuk Windows
+# TonePix for Windows
 
 **TonePix** (sebelumnya bernama **MediaForge**) adalah aplikasi desktop native untuk Windows. Satu aplikasi untuk:
 - unduh dan konversi media;
