@@ -1,4 +1,4 @@
-name: Build and publish MediaForge release
+name: Build and publish TonePix release
 
 on:
   workflow_dispatch:
@@ -16,7 +16,7 @@ jobs:
     defaults:
       run:
         shell: bash
-        working-directory: mediaforge
+        working-directory: tonepix
     steps:
       - uses: actions/checkout@v4
         with:
@@ -30,7 +30,7 @@ jobs:
         with:
           repository: 4rixxr/MediaForge
           ref: ${{ env.SOURCE_REF }}
-          path: mediaforge
+          path: tonepix
 
       - uses: actions/setup-dotnet@v4
         with:
@@ -75,17 +75,17 @@ jobs:
       - name: Self-test the packaged app
         shell: pwsh
         run: |
-          $p = Start-Process -FilePath "out\win\app\MediaForge.exe" -ArgumentList "--self-test" -Wait -PassThru -NoNewWindow
+          $p = Start-Process -FilePath "out\win\app\TonePix.exe" -ArgumentList "--self-test" -Wait -PassThru -NoNewWindow
           if ($p.ExitCode -ne 0) { throw "Self-test failed with exit code $($p.ExitCode)" }
 
       - name: Publish GitHub Release (separate files)
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          files=(dist/MediaForge-Setup-*.exe dist/MediaForge-Portable-*.exe dist/SHA256SUMS.txt)
-          notes="MediaForge ${RELEASE_TAG#v} untuk Windows 10/11 64-bit. Unduh **Setup** untuk menginstal, atau **Portable** untuk langsung menjalankan tanpa instal. Sudah termasuk FFmpeg, yt-dlp, Deno, CDRDAO, dan VCDImager. Dibangun dari 4rixxr/MediaForge@${SOURCE_REF:0:7}."
+          files=(dist/TonePix-Setup-*.exe dist/TonePix-Portable-*.exe dist/SHA256SUMS.txt)
+          notes="TonePix ${RELEASE_TAG#v} untuk Windows 10/11 64-bit. Unduh **Setup** untuk menginstal, atau **Portable** untuk langsung menjalankan tanpa instal. Sudah termasuk FFmpeg, yt-dlp, Deno, CDRDAO, dan VCDImager. Dibangun dari 4rixxr/TonePix@${SOURCE_REF:0:7}."
           if gh release view "$RELEASE_TAG" --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1; then
             gh release upload "$RELEASE_TAG" "${files[@]}" --clobber --repo "$GITHUB_REPOSITORY"
           else
-            gh release create "$RELEASE_TAG" "${files[@]}" --title "MediaForge ${RELEASE_TAG#v}" --notes "$notes" --target "$GITHUB_SHA" --repo "$GITHUB_REPOSITORY"
+            gh release create "$RELEASE_TAG" "${files[@]}" --title "TonePix ${RELEASE_TAG#v}" --notes "$notes" --target "$GITHUB_SHA" --repo "$GITHUB_REPOSITORY"
           fi
