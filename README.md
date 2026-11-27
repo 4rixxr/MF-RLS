@@ -1,17 +1,18 @@
 # TonePix [Beta Ver.] for Windows
 
-**TonePix** (sebelumnya bernama **MediaForge**) adalah aplikasi desktop native untuk Windows. Satu aplikasi untuk:
-- unduh dan konversi media;
-- editor video multi-track;
-- Audio Studio dan Retune;
-- pemisah vokal AI;
-- Image Studio (foto + vektor);
-- pemutar musik dengan lirik;
-- pembakar CD/DVD/VCD.
+**TonePix** (sebelumnya bernama **MediaForge**) adalah aplikasi desktop native untuk Windows.
 
 **Gratis, tanpa membership, tanpa akun, tanpa iklan.**
 
-Penjelasan lengkap fitur ada di README kode sumber: [4rixxr/MediaForge](https://github.com/4rixxr/MediaForge#readme).
+## Fitur
+
+- Unduh dan konversi media
+- Editor video multi-track
+- Audio Studio dan Retune
+- Pemisah vokal AI
+- Image Studio (foto + vektor)
+- Pemutar musik dengan lirik
+- Pembakar CD/DVD/VCD
 
 ## Unduh
 
@@ -27,18 +28,26 @@ Rilis v2.0.0 – v4.0.0 masih memakai nama lama (`MediaForge-…exe`). Mulai v4.
 Bila MediaForge masih terpasang, installer TonePix menawarkan untuk menghapusnya. Pengaturan, riwayat, dan proyek
 Anda tetap ada dan dipindahkan otomatis.
 
-Kebutuhan: Windows 10/11 64-bit, minimal Intel Celeron N4000, RAM 4 GB, HDD.
+## Kebutuhan sistem
+
+- Windows 10/11 64-bit
+- Minimal Intel Celeron N4000, RAM 4 GB, HDD
+
 Sudah termasuk FFmpeg, yt-dlp, Deno, CDRDAO, dan VCDImager.
 
 Saat pertama dijalankan, Windows SmartScreen bisa memberi peringatan karena EXE belum ditandatangani:
 klik **More info → Run anyway**.
 
-## Cara kerja repositori ini
+## Komponen pihak ketiga
 
-Rilis dibuat otomatis oleh GitHub Actions (`.github/workflows/release.yml`) dari kode sumber
-[4rixxr/MediaForge](https://github.com/4rixxr/MediaForge). Workflow tersebut:
-- membangun aplikasi;
-- menjalankan self-test;
-- menerbitkan installer, portable, dan checksum.
+Masing-masing komponen mengikuti lisensinya sendiri:
 
-Coming soon porting to MacOS, iOS, Android & OxygenOS.
+- [FFmpeg](https://ffmpeg.org/legal.html)
+- [yt-dlp](https://github.com/yt-dlp/yt-dlp)
+- [Deno](https://github.com/denoland/deno)
+- [CDRDAO](https://github.com/cdrdao/cdrdao)
+- [VCDImager](https://www.gnu.org/software/vcdimager/)
+
+## Segera hadir
+
+Versi untuk macOS, iOS, Android, dan OxygenOS.
