@@ -20,17 +20,17 @@ conversion, video, audio and image editing, music playback and disc burning toge
 
 **Free. No membership, no account, no ads.**
 
-- [FEATURES](#features)
-- [DOWNLOAD](#download)
+- [Features](#features)
+- [Download](#download)
   - [Release files](#release-files)
   - [Verify your download](#verify-your-download)
-- [SYSTEM REQUIREMENTS](#system-requirements)
-- [INSTALLATION](#installation)
+- [System Requirements](#system-requirements)
+- [Installation](#installation)
   - [Upgrading from MediaForge](#upgrading-from-mediaforge)
-- [VERSION HISTORY](#version-history)
+- [Version History](#version-history)
 - [FAQ](#faq)
-- [ROADMAP](#roadmap)
-- [THIRD-PARTY COMPONENTS](#third-party-components)
+- [Roadmap](#roadmap)
+- [Third-Party Components](#third-party-components)
 
 ## Features
 
